@@ -17,7 +17,7 @@ variable "release_version" {
 }
 
 variable "service_account_name" {
-  description = "Name of the service account to have right to send to S3 bucket"
+  description = "Name of the service account to have right to use load balancer"
   type        = string
   default     = "aws-load-balancer-controller-sa"
 }
@@ -60,11 +60,6 @@ variable "irsa_iam_role_path" {
 
 variable "cluster_id" {
   description = "EKS cluster name"
-  type        = string
-}
-
-variable "bucket" {
-  description = "bucket name"
   type        = string
 }
 
