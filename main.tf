@@ -1,5 +1,5 @@
 module "helm" {
-  source          = "github.com/terraform-helm/terraform-helm-velero"
+  source          = "github.com/terraform-helm/terraform-helm-aws-load-balancer-controller"
   count           = var.install_helm ? 1 : 0
   release_version = var.release_version
   images          = var.images
