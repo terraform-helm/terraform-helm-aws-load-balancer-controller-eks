@@ -1,17 +1,10 @@
 locals {
-  eks_oidc_issuer_url   = var.oidc_provider != null ? var.oidc_provider : replace(data.aws_eks_cluster.this.identity[0].oidc[0].issuer, "https://", "")
-  eks_oidc_provider_arn = "arn:${local.aws}:iam::${data.aws_caller_identity.this.account_id}:oidc-provider/${local.eks_oidc_issuer_url}"
-  aws                   = data.aws_partition.this.partition
+  aws = data.aws_partition.this.partition
 }
 
 data "aws_partition" "this" {}
-data "aws_caller_identity" "this" {}
 
-data "aws_eks_cluster" "this" {
-  name = var.cluster_id
-}
-
-data "aws_iam_policy_document" "aws_lb" {
+data "aws_iam_policy_document" "this" {
   statement {
     sid       = ""
     effect    = "Allow"
@@ -325,38 +318,16 @@ data "aws_iam_policy_document" "aws_lb" {
   }
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    principals {
-      type        = "Federated"
-      identifiers = [local.eks_oidc_provider_arn]
-    }
-
-    actions = [
-      "sts:AssumeRoleWithWebIdentity",
-    ]
-
-    condition {
-      test     = "StringLike"
-      variable = "${local.eks_oidc_issuer_url}:sub"
-      values   = ["system:serviceaccount:${var.kubernetes_namespace}:${var.service_account_name}"]
-    }
-    condition {
-      test     = "StringLike"
-      variable = "${local.eks_oidc_issuer_url}:aud"
-      values   = ["sts.amazonaws.com"]
+module "role_sa_secrets" {
+  source        = "github.com/littlejo/terraform-aws-role-eks.git?ref=v0.1"
+  name          = var.irsa_iam_role_name
+  inline_policy = data.aws_iam_policy_document.this.json
+  cluster_id    = var.cluster_id
+  create_sa     = true
+  service_accounts = {
+    overprovisioning = {
+      name      = var.service_account_name
+      namespace = var.kubernetes_namespace
     }
   }
-}
-
-module "iam" {
-  source                        = "github.com/terraform-helm/terraform-aws-iam-role"
-  iam_role_name                 = var.irsa_iam_role_name
-  iam_role_description          = "AWS IAM Role for the Kubernetes service account ${var.service_account_name}."
-  iam_role_assume_role_policy   = data.aws_iam_policy_document.assume_role_policy.json
-  iam_role_permissions_boundary = var.irsa_iam_permissions_boundary
-  iam_role_path                 = var.irsa_iam_role_path
-  iam_policy_name               = var.irsa_iam_policy_name
-  iam_policy_description        = "Allows lb controller to manage ALB and NLB"
-  iam_policy_policy             = data.aws_iam_policy_document.aws_lb.json
 }
