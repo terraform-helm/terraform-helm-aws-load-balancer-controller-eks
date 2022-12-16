@@ -318,7 +318,7 @@ data "aws_iam_policy_document" "this" {
   }
 }
 
-module "role_sa_secrets" {
+module "role_sa" {
   source        = "github.com/littlejo/terraform-aws-role-eks.git?ref=v0.1"
   name          = var.irsa_iam_role_name
   inline_policy = data.aws_iam_policy_document.this.json
