@@ -325,7 +325,7 @@ module "role_sa_secrets" {
   cluster_id    = var.cluster_id
   create_sa     = true
   service_accounts = {
-    overprovisioning = {
+    alb = {
       name      = var.service_account_name
       namespace = var.kubernetes_namespace
     }
