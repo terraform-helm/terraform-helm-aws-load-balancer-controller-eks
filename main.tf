@@ -3,6 +3,7 @@ module "helm" {
   count           = var.install_helm ? 1 : 0
   release_version = var.release_version
   images          = var.images
+  namespace       = var.namespace
   set_values = [
     {
       name  = "serviceAccount.name"

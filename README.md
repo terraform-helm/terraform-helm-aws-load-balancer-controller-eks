@@ -19,6 +19,7 @@
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_helm"></a> [helm](#module\_helm) | github.com/terraform-helm/terraform-helm-aws-load-balancer-controller | v0.1.1 |
+| <a name="module_namespace"></a> [namespace](#module\_namespace) | github.com/littlejo/terraform-kubernetes-namespace.git | v0.1 |
 | <a name="module_role_sa"></a> [role\_sa](#module\_role\_sa) | github.com/littlejo/terraform-aws-role-eks.git | v0.1 |
 
 ## Resources
@@ -33,10 +34,11 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id) | EKS cluster name | `string` | n/a | yes |
+| <a name="input_create_namespace"></a> [create\_namespace](#input\_create\_namespace) | Create namespace ? | `bool` | `false` | no |
 | <a name="input_images"></a> [images](#input\_images) | Map of images | <pre>object({<br>    main = optional(string)<br>  })</pre> | <pre>{<br>  "main": null<br>}</pre> | no |
 | <a name="input_install_helm"></a> [install\_helm](#input\_install\_helm) | Do you want to install helm chart? | `bool` | `true` | no |
 | <a name="input_irsa_iam_role_name"></a> [irsa\_iam\_role\_name](#input\_irsa\_iam\_role\_name) | IAM role name for IRSA | `string` | `"eks-lb"` | no |
-| <a name="input_kubernetes_namespace"></a> [kubernetes\_namespace](#input\_kubernetes\_namespace) | Namespace | `string` | `"kube-system"` | no |
+| <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace | `string` | `"kube-system"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region of you eks cluster | `string` | n/a | yes |
 | <a name="input_release_version"></a> [release\_version](#input\_release\_version) | version of helm release | `string` | `null` | no |
 | <a name="input_service_account_name"></a> [service\_account\_name](#input\_service\_account\_name) | Name of the service account to have right to use load balancer | `string` | `"aws-load-balancer-controller-sa"` | no |

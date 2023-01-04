@@ -26,10 +26,16 @@ variable "service_account_name" {
   default     = "aws-load-balancer-controller-sa"
 }
 
-variable "kubernetes_namespace" {
+variable "namespace" {
   description = "Namespace"
   type        = string
   default     = "kube-system"
+}
+
+variable "create_namespace" {
+  description = "Create namespace ?"
+  type        = bool
+  default     = false
 }
 
 variable "irsa_iam_role_name" {

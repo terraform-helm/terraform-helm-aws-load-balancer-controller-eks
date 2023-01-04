@@ -318,6 +318,12 @@ data "aws_iam_policy_document" "this" {
   }
 }
 
+module "namespace" {
+  count  = var.create_namespace ? 1 : 0
+  source = "github.com/littlejo/terraform-kubernetes-namespace.git?ref=v0.1"
+  name   = var.namespace
+}
+
 module "role_sa" {
   source        = "github.com/littlejo/terraform-aws-role-eks.git?ref=v0.1"
   name          = var.irsa_iam_role_name
@@ -325,9 +331,9 @@ module "role_sa" {
   cluster_id    = var.cluster_id
   create_sa     = true
   service_accounts = {
-    alb = {
+    main = {
       name      = var.service_account_name
-      namespace = var.kubernetes_namespace
+      namespace = var.namespace
     }
   }
 }
